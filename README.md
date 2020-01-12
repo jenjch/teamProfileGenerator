@@ -36,11 +36,9 @@ The dependencies for the application are listed in the package.JSON file and a g
 The completed application is updated and available for download in Github: 
 https://github.com/jenjch/teamProfileGenerator
 
-A sample of a generated HTML is deployed at:
-https://jenjch.github.io/teamProfileGenerator
-and 
+A sample of a generated HTML is available in the output folder within the repo: (./output/team.html)
 
-An animated gif demonstrating the app functionality is available in the repo and here: ![profile generator demo](./profileGenerator.gif)
+An animated gif demonstrating the app functionality is available in the repo and here: ![team generator demo](./teamGenerator.gif)
 
 ## Acceptance Criteria
 

@@ -5,11 +5,6 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
-// const path = require("path");
-
-// need to clarify how this path works
-// const outputFolder = path.resolve(__dirname, "output", "team.html")
-
 // need array data for team members added; member specific array easier to send to HTML
 // this keeps track of all employees created
 let employeeArray = [];
@@ -246,7 +241,7 @@ function generateHTML() {
     <div class="card col-3 shadow">
         <div class="card-header">
             <h2 class="card-title text-center">${internName}</h2>
-            <h3 class="card-title text-center"><i class="fas fa-user-cog"></i> Engineer</h3>
+            <h3 class="card-title text-center"><i class="fas fa-user-cog"></i> Intern</h3>
         </div>
 
         <div class="card-body">
@@ -275,7 +270,7 @@ function generateHTML() {
     crossorigin="anonymous"/>
     <style>
         body {
-            background-image: url(../assets/so-white.png);
+            background-image: url(../Assets/so-white.png);
         }
 
         .jumbotron {
@@ -322,14 +317,14 @@ function generateHTML() {
 </body>
 </html>`;
 
-  // the above "join" uses empty string to remove commas between employee types where user can add multiple
+  // the above "join" have empty strings to remove commas between employee types users can add multiples of
 
   // write to file
-  fs.writeFile("team.html", htmlTemplate, err => {
+  fs.writeFile("./output/team.html", htmlTemplate, err => {
     // throws an error, you could also catch it here
     if (err) throw err;
 
-    // success case, the file was saved
+    // success case, the file is saved in the ouput folder
     console.log("team.html generated!");
   });
 }
