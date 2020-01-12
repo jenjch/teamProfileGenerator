@@ -1,8 +1,6 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const util = require("util");
 const jest = require("jest");
-const Employee = require("./lib/Employee");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -12,166 +10,262 @@ const Intern = require("./lib/Intern");
 // need to clarify how this path works
 // const outputFolder = path.resolve(__dirname, "output", "team.html")
 
-// const writeFileAsync = util.promisify(fs.writeFile);
-
+// need array data for team members added; member specific array easier to send to HTML
 // this keeps track of all employees created
-let employeeArray = []
-
-// need array data for team members and member data to send to HTML
-// how to add the member HTML templates to the main template before writing file?
+let employeeArray = [];
+let managerArray = [];
+let engineerArray = [];
+let internArray = [];
 
 // added question sets as const
 const managerQuestions = [
-{
-    type:"input",
+  {
+    type: "input",
     name: "managerName",
     message: "What is the name of your Manager?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "managerId",
     message: "What is the Manager's id?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "managerEmail",
     message: "What is the Manager's email?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "officeNumber",
     message: "What is the Manager's office number?"
-}];
+  }
+];
 
 const employeeQuestion = [
-{ 
-    // list type gives options for user to select
+  {
+    // list type gives options for user to select type of employee to add
     type: "list",
     name: "addEmployee",
     message: "What type of employee do you want to add?",
     choices: ["Engineer", "Intern", "I am done adding employees"]
-} 
+  }
 ];
 
 const engineerQuestions = [
-{
-    type:"input",
+  {
+    type: "input",
     name: "engineerName",
     message: "What is the name of your Engineer?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "engineerId",
     message: "What is the Engineer's id?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "engineerEmail",
     message: "What is the Engineer's email?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "github",
     message: "What is the Engineer's github?"
-}];
+  }
+];
 
-const internQuestions = [{
-    type:"input",
+const internQuestions = [
+  {
+    type: "input",
     name: "internName",
     message: "What is the name of your Intern?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "internId",
     message: "What is the Intern's id?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "internEmail",
     message: "What is the Intern's email?"
-},
-{
-    type:"input",
+  },
+  {
+    type: "input",
     name: "school",
     message: "What is the Intern's school?"
-}];
+  }
+];
 
+// inquirer functions created to solicit question response.
+// push new Class object responses to arrays
 
-
-// get question response
-// create html file
-
+// AddManager initiates (part of init function at bottom of code)
 function addManager() {
-    return inquirer.prompt(managerQuestions)
-    .then(function(answers) {
-        let newManager = new Manager (answers.managerName, answers.managerId, answers.managerEmail, answers.officeNumber)
-        // condensed below to registerEmployee function to avoid redundant code
-        // employeeArray.push(newManager);
-        // finalizeEmployees();
-        registerEmployee (newManager);
-    })
+  return inquirer.prompt(managerQuestions).then(function(answers) {
+    let newManager = new Manager(
+      answers.managerName,
+      answers.managerId,
+      answers.managerEmail,
+      answers.officeNumber
+    );
+    managerArray.push(newManager);
+    // these two functions are condensed to the registerEmployee function to avoid redundant code
+    // employeeArray.push(newManager);
+    // finalizeEmployees();
+    registerEmployee(newManager);
+  });
 }
 
 function finalizeEmployees() {
-    return inquirer.prompt(employeeQuestion)
-    .then(function(answers) {
-        console.log(answers);
-        if (answers.addEmployee == "Intern") {
-            addIntern();
-        } else if (answers.addEmployee == "Engineer") {
-            addEngineer();
-        } else {
-            // some function to run the html
-            console.log ("ready to generate HTML");
-            console.log(employeeArray);
-            // pull generateHTML function here
-            generateHTML ();
-        }
-        
-        // where to write and log the response data for addIntern and AddEnginer
-
-    })
+  return inquirer.prompt(employeeQuestion).then(function(answers) {
+    console.log(answers);
+    // addEmployee is from the employeeQuestion array 'name: "addEmployee",'
+    // if/else determines the questions to prompt after user selects employe type to add
+    if (answers.addEmployee == "Intern") {
+      addIntern();
+    } else if (answers.addEmployee == "Engineer") {
+      addEngineer();
+    } else {
+      // member data gathering complete: "I am done adding employees"
+      console.log("Ready to generate HTML!");
+      // call generateHTML function here to prompt write to team.html file
+      generateHTML();
+    }
+  });
 }
 
 // function that console logs data for just entered employee and pushes each entry to array (employee is parameter)
-function registerEmployee (employee) {
-    console.log(employee);
-    employeeArray.push(employee);
-        finalizeEmployees();
+function registerEmployee(employee) {
+  console.log("Just added employee details:");
+  console.log(employee);
+  employeeArray.push(employee);
+// call this function again to prompt adding more members   
+  finalizeEmployees();
 }
 
+// inquirer for Engineer profiles, push data from Class to array
 function addEngineer() {
-    return inquirer.prompt(engineerQuestions)
-    .then(function(answers) {
-    let newEngineer = new Engineer (answers.engineerName, answers.engineerId, answers.engineerEmail, answers.github)
-        registerEmployee (newEngineer);
-    })    
+  return inquirer.prompt(engineerQuestions).then(function(answers) {
+    let newEngineer = new Engineer(
+      answers.engineerName,
+      answers.engineerId,
+      answers.engineerEmail,
+      answers.github
+    );
+    engineerArray.push(newEngineer);
+    registerEmployee(newEngineer);
+  });
 }
 
+// inquirer for Intern profiles, push data from Class to array
 function addIntern() {
-    return inquirer.prompt(internQuestions)
-    .then(function(answers) {
-    let newIntern = new Intern (answers.internName, answers.internId, answers.internEmail, answers.school)
-        registerEmployee (newIntern);
-    })
+  return inquirer.prompt(internQuestions).then(function(answers) {
+    let newIntern = new Intern(
+      answers.internName,
+      answers.internId,
+      answers.internEmail,
+      answers.school
+    );
+    internArray.push(newIntern);
+    registerEmployee(newIntern);
+  });
 }
 
+// function to compile the HTML
+function generateHTML() {
+  // create card for every type of employee added. It is easier to create separate arrays for each type of employee rather than setting conditions for different card HTML for each type of employee added in one array
+  console.log("Complete Employee Array ready for HTML generation:");
+  console.log(employeeArray);
+  console.log("Manager Array for HTML:");
+  console.log(managerArray);
+  console.log("Engineer Array for HTML:");
+  console.log(engineerArray);
+  console.log("Intern Array for HTML:");
+  console.log(internArray);
 
-function generateHTML () {
+  // only one manager, index 0 and no need to use for loop
+  let managerName = managerArray[0].name;
+  let managerId = managerArray[0].id;
+  let managerEmail = managerArray[0].email;
+  let managerOffice = managerArray[0].officeNumber;
+  let managerHTML = `
+    <div class="card col-3 shadow">
+        <div class="card-header">
+            <h2 class="card-title text-center">${managerName}</h2>
+            <h3 class="card-title text-center"><i class="fas fa-users"></i> Manager</h3>
+        </div>
 
-// generated html for every employee card we make (html text for each card). Add to empty string?
-var teamProfile = "";
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">ID: ${managerId}</li>
+                <li class="list-group-item">Email: <a href="mailto:${managerEmail}">${managerEmail}</a></li>
+                <li class="list-group-item">Office number: ${managerOffice}</li>
+            </ul>
+        </div>
+    </div>
+    `;
 
-// for loop to generate card for each employee in array and add to HTML template
-employeeArray.forEach (employee => {    
-    teamProfile+= employee 
-    // template literal for cards, also $ for adding divs, classes, etc.
-})
+  // for multiple engineers, add to engineer template array before adding to main HTML
+  let engineerTemplate = [];
 
-// concatenate in a string is simplist for generating HTML
-var htmlTemplate = `<!DOCTYPE html>
-<html lang="en">
-<head>
+  engineerArray.forEach(engineer => {
+    let engineerName = engineer.name;
+    let engineerId = engineer.id;
+    let engineerEmail = engineer.email;
+    let engineerGithub = engineer.github;
+    let engineerHTML = `
+    <div class="card col-3 shadow">
+        <div class="card-header">
+            <h2 class="card-title text-center">${engineerName}</h2>
+            <h3 class="card-title text-center"><i class="fas fa-user-cog"></i> Engineer</h3>
+        </div>
+
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">ID: ${engineerId}</li>
+                <li class="list-group-item">Email: <a href="mailto:${engineerEmail}">${engineerEmail}</a></li>
+                <li class="list-group-item">GitHub: <a href="https://github.com/${engineerGithub}" target="_blank">${engineerGithub}</a></li>
+            </ul>
+        </div>
+    </div>
+    `;
+    // push each engineer entry into the Template array that will go into the main HTML
+    engineerTemplate.push(engineerHTML);
+  });
+
+  // for multiple interns, add to intern template array before adding to main HTML
+  let internTemplate = [];
+
+  internArray.forEach(intern => {
+    let internName = intern.name;
+    let internId = intern.id;
+    let internEmail = intern.email;
+    let internSchool = intern.school;
+    let internHTML = `
+    <div class="card col-3 shadow">
+        <div class="card-header">
+            <h2 class="card-title text-center">${internName}</h2>
+            <h3 class="card-title text-center"><i class="fas fa-user-cog"></i> Engineer</h3>
+        </div>
+
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">ID: ${internId}</li>
+                <li class="list-group-item">Email: <a href="mailto:${internEmail}">${internEmail}</a></li>
+                <li class="list-group-item">School: ${internSchool}</li>
+            </ul>
+        </div>
+    </div>
+    `;
+    // push each intern entry into the Template array that will go into the main HTML
+    internTemplate.push(internHTML);
+  });
+
+  // main HTML page template with CSS included
+  var htmlTemplate = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -218,82 +312,32 @@ var htmlTemplate = `<!DOCTYPE html>
 
     <div class="container-fluid">
         <div class="row d-flex justify-content-center">
-
-            ${teamProfile}
+            
+            ${managerHTML}
+            ${engineerTemplate.join("")}
+            ${internTemplate.join("")}
 
         </div>
     </div>
 </body>
-</html>`
+</html>`;
 
-// write to file
-fs.writeFile('team.html', htmlTemplate, (err) => {
+  // the above "join" uses empty string to remove commas between employee types where user can add multiple
+
+  // write to file
+  fs.writeFile("team.html", htmlTemplate, err => {
     // throws an error, you could also catch it here
     if (err) throw err;
 
     // success case, the file was saved
-    console.log('team.html generated!');
-});
+    console.log("team.html generated!");
+  });
 }
 
-function init (){
-addManager();
-
-    // const htmlData = {
-    //     managerName:answers.managerName,
-    //     managerId:answers.mangaerId,
-    //     managerEmail:answers.managerEmail
-    // }
-
-    // const html = generateHTML(htmlData);
-
-    // return writeFileAsync("index.html", html);
-  
-    // do I need this? what is this doing?
-//   .then(function() {
-//     console.log("Successfully wrote to index.html");
-//   })
-//   .catch(function(err) {
-//     console.log(err);
-//   });
-
+// define function to initiate call
+function init() {
+  addManager();
 }
 
-// need to make sure tests pass
-
-// async function init() {
-//     console.log("async init function works")
-//     try {
-//         // from questions
-//       const answers = await promptUser();
-//       console.log(answers);
-
-//     // need to complete question answers object
-//     const htmlData = {
-//         name:answers.name,
-//         id:answers.id,
-//         email:answers.email
-//     }
-
-//     console.log(htmlData);
-  
-    // Need some sort of function to use data and generate the HTML
-    // const html = generateHTML(htmlData);
-
-    // how to use the classes, constructors, and placeholders in html?
-
-    // how to write to file and combine templates?
-    // new, map, push
-
-//     await writeFileAsync("team.html", html);
-  
-//     console.log("Successfully wrote to team.html");
-
-// }   catch(err) {
-//     console.log(err);
-//     }
-// }
-
-// initiates all calls
-init ();
-
+// initiates app
+init();
