@@ -38,7 +38,7 @@ https://github.com/jenjch/teamProfileGenerator
 
 A sample of a generated HTML is available in the output folder within the repo: (./output/team.html)
 
-A png of the generated HTML is available in the root directory: ![teamPNG](./sampleTeam.png)
+A PNG of the generated HTML is available in the root directory: ![teamPNG](./sampleTeam.png)
 
 An animated gif demonstrating the app functionality is available in the repo and here: ![team generator demo](./teamGenerator.gif)
 
