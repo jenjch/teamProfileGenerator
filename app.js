@@ -241,7 +241,7 @@ function generateHTML() {
     <div class="card col-3 shadow">
         <div class="card-header">
             <h2 class="card-title text-center">${internName}</h2>
-            <h3 class="card-title text-center"><i class="fas fa-user-cog"></i> Intern</h3>
+            <h3 class="card-title text-center"><i class="fas fa-user-graduate"></i> Intern</h3>
         </div>
 
         <div class="card-body">
